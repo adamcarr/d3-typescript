@@ -1,0 +1,21 @@
+{
+  "name": "d3-typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "d3": "^3.5.5",
+    "lodash": "^3.9.3"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.3",
+    "gulp": "^3.9.0",
+    "gulp-connect": "^2.2.0",
+    "tsify": "^0.11.2"
+  }
+}

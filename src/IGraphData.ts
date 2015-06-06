@@ -1,5 +1,5 @@
 interface IGraphData {
-	year: number;
+	year: Date;
 	value: number;
 }
 

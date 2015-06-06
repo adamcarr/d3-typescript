@@ -20,7 +20,7 @@ export interface IDataRange extends IDataComparison {
 
 export class VisualizationManager {
 	public visualizationElement: d3.Selection<any>;
-	public xScale: d3.scale.Linear<number, number>;
+	public xScale: d3.time.Scale<number, number>;
 	public yScale: d3.scale.Linear<number, number>;
 	
 	public dataRanges: {
@@ -31,8 +31,8 @@ export class VisualizationManager {
 		this.visualizationElement = d3.select(this.selector);
 	}
 	
-	initialize(xRange: [number, number], yRange: [number, number]) {
-		this.xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain(xRange);
+	initialize(xRange: [Date, Date], yRange: [number, number]) {
+		this.xScale = d3.time.scale().range([MARGINS.left, WIDTH - MARGINS.right]).domain(xRange);
 		this.yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain(yRange);
 		
 		this.visualizationElement.append("svg:g")
@@ -71,27 +71,56 @@ export class VisualizationManager {
 	}
 	
 	updateGraph(key: string) {
-		var dataRange = this.dataRanges[key];
-		
-		if (dataRange.isVisible) {
-			var lineGen = d3.svg.line<IGraphData>()
-				.x((d) => this.xScale(d.year))
-				.y((d) => this.yScale(d.value))
-				.interpolate("basis");
+		var lineGen = d3.svg.line<IGraphData>()
+			.x((d) => this.xScale(d.year))
+			.y((d) => this.yScale(d.value))
 			
-			var path = this.visualizationElement.append('path')
-				.attr('d', lineGen(PercentageConverter(dataRange.data)))
-				.attr('stroke', dataRange.color)
-				.attr('fill', 'none')
-				.attr('stroke-width', 2)
-				.attr('class', key)
-				.style('opacity', 0)
-				.transition()
-					.style('opacity', 100)
-					.duration(10000); //not sure why this scale is off...
-		} else {
-			this.visualizationElement.selectAll(`path.${key}`).transition().style('opacity', 0).duration(1000).remove();
-		}
+		var dataSet = _.filter(this.dataRanges, 'isVisible');
+		
+		var pathContainers = this.visualizationElement.selectAll('g.line')
+			.data(dataSet);
+			
+		pathContainers.enter().append('g')
+			.attr('class', 'line')
+			.attr('stroke-width', 1);
+			
+		pathContainers
+			.attr('stroke', (d, i) => d.color)
+			.attr('fill', (d, i) => d.color);
+		
+		pathContainers.exit().remove();
+		
+		var paths = pathContainers.selectAll('path')
+			.data(d => [PercentageConverter(d.data)]);
+			
+		paths.enter()
+			.append('path')
+			.attr('fill', 'none');
+		
+		paths.attr('d', lineGen);
+		
+		var circles = pathContainers.selectAll('circle')
+			.data(d => PercentageConverter(d.data));
+			
+		circles.enter()
+			.append('circle')
+			.attr('r', 3);
+					
+		circles.attr('cx', d => this.xScale(d.year) )
+			.attr('cy', d => this.yScale(d.value))
+		
+		pathContainers.selectAll('circle').on('click', (d, i) => {
+			alert(JSON.stringify(this.getVisibleValuesAtIndex(i), null, '  '));
+		});
+	}
+	
+	getVisibleValuesAtIndex(index: number): {name: string, data: IGraphData}[] {
+		return _.filter(this.dataRanges, 'isVisible').map((dataRange) => {
+			return {
+				name: dataRange.name,
+				data: dataRange.data[index]
+			}
+		});
 	}
 }
 

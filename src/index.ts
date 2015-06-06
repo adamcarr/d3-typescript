@@ -13,7 +13,7 @@ var visualizationManager = new VisualizationManager('#visualisation');
 d3.csv<IEconomicData>("EconomicData.csv", 
 	(row) => {
 		var returnObj: IEconomicData = {
-			Year: +row['Year'],
+			Year: new Date(row['Year']),
 			Wages: +row['Wages'],
 			PrivateWages: +row['PrivateWages'],
 			GovernmentWages: +row['GovernmentWages'],

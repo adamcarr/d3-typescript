@@ -1,5 +1,5 @@
 interface IEconomicData {
-	Year: number;
+	Year: Date;
 	Wages: number;
 	PrivateWages: number;
 	GovernmentWages: number;

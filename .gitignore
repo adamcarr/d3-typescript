@@ -1,3 +1,4 @@
 node_modules/
 .settings/
-bundle.js
+jspm_packages/
+dist/

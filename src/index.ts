@@ -65,10 +65,10 @@ d3.csv<IEconomicData>("EconomicData.csv",
 		// });
 	});
 	
-function getSelectValues(selectElement) {
-	var result = [];
+function getSelectValues(selectElement: any) {
+	var result: any[] = [];
 	var options = selectElement && selectElement.options;
-	var opt;
+	var opt: any;
 
 	for (var i = 0, iLen = options.length; i < iLen; i++) {
 		opt = options[i];

@@ -17,13 +17,18 @@
 			    cursor: help;
 			}
 		</style>
+		<script src="https://jspm.io/system@0.16.js"></script>
+		<script src="config.js"></script>
 	</head>
 	<body>
 		<svg id="visualisation" width="1000" height="500"></svg>
 		<hr />
 		<div id="comparisons"></div>
 		<!--<select id="comparisons" multiple size="7"></select>-->
-		<script src="bundle.js" type="text/javascript"></script>
+		<!--<script src="bundle.js" type="text/javascript"></script>-->
+		<script>
+			System.import('dist/index');
+		</script>
 	</body>
 
 </html>
